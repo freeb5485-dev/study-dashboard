@@ -1,2 +1,809 @@
-# study-dashboard
-Personal Study Dashboard
+[index.html](https://github.com/user-attachments/files/31855309/index.html)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Product Study Dashboard</title>
+
+<style>
+  :root{
+    --bg:#07111f;
+    --bg2:#0b1729;
+    --card:rgba(16,31,52,.78);
+    --card-2:rgba(20,39,64,.82);
+    --text:#f4f8ff;
+    --muted:#8ea2bb;
+    --line:rgba(255,255,255,.09);
+    --blue:#60a5fa;
+    --cyan:#22d3ee;
+    --violet:#a78bfa;
+    --green:#34d399;
+    --orange:#fbbf24;
+    --shadow:0 24px 70px rgba(0,0,0,.28);
+    --radius:24px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html{scroll-behavior:smooth}
+
+  body{
+    min-height:100vh;
+    color:var(--text);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(circle at 10% 0%,rgba(96,165,250,.16),transparent 28%),
+      radial-gradient(circle at 90% 8%,rgba(167,139,250,.14),transparent 30%),
+      radial-gradient(circle at 50% 100%,rgba(34,211,238,.08),transparent 34%),
+      var(--bg);
+    line-height:1.5;
+  }
+
+  button{font:inherit}
+
+  .app{
+    width:min(1440px,calc(100% - 48px));
+    margin:auto;
+    padding:42px 0 80px;
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:24px;
+    margin-bottom:28px;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:15px;
+  }
+
+  .brand-mark{
+    width:54px;height:54px;border-radius:17px;
+    display:grid;place-items:center;
+    font-size:24px;font-weight:800;
+    background:linear-gradient(135deg,var(--blue),var(--violet));
+    box-shadow:0 14px 40px rgba(96,165,250,.24);
+  }
+
+  .brand h1{
+    font-size:21px;
+    letter-spacing:-.5px;
+  }
+
+  .brand p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:2px;
+  }
+
+  .today{
+    padding:11px 15px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    background:rgba(255,255,255,.035);
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  .hero{
+    position:relative;
+    overflow:hidden;
+    padding:42px;
+    border:1px solid var(--line);
+    border-radius:30px;
+    background:
+      linear-gradient(135deg,rgba(96,165,250,.13),rgba(167,139,250,.09)),
+      var(--card);
+    box-shadow:var(--shadow);
+    margin-bottom:20px;
+  }
+
+  .hero:after{
+    content:"";
+    position:absolute;
+    width:320px;height:320px;
+    right:-110px;top:-150px;
+    border-radius:50%;
+    background:rgba(167,139,250,.12);
+    filter:blur(12px);
+  }
+
+  .hero-inner{position:relative;z-index:1}
+
+  .eyebrow{
+    color:#93c5fd;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:11px;
+    font-weight:800;
+    margin-bottom:10px;
+  }
+
+  .hero h2{
+    font-size:clamp(32px,5vw,52px);
+    line-height:1.05;
+    letter-spacing:-2px;
+    max-width:850px;
+  }
+
+  .hero p{
+    color:var(--muted);
+    max-width:760px;
+    margin-top:13px;
+    font-size:15px;
+  }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+  }
+
+  .stat{
+    padding:22px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--card);
+    box-shadow:0 14px 40px rgba(0,0,0,.13);
+  }
+
+  .stat-label{color:var(--muted);font-size:12px;margin-bottom:7px}
+  .stat-value{font-size:30px;font-weight:800;letter-spacing:-1px}
+  .stat-note{color:var(--muted);font-size:11px;margin-top:2px}
+
+  .progress-card{
+    padding:22px 24px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--card);
+    margin-bottom:28px;
+  }
+
+  .progress-head{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:11px;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .progress-head span:last-child{color:#93c5fd}
+
+  .track{
+    height:11px;
+    overflow:hidden;
+    border-radius:999px;
+    background:#14243a;
+  }
+
+  .fill{
+    width:0%;
+    height:100%;
+    border-radius:inherit;
+    background:linear-gradient(90deg,var(--blue),var(--violet),var(--cyan));
+    transition:width .4s ease;
+  }
+
+  .tabs{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+
+  .tab{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.035);
+    color:var(--muted);
+    padding:11px 16px;
+    border-radius:13px;
+    cursor:pointer;
+    transition:.2s ease;
+    font-weight:700;
+    font-size:13px;
+  }
+
+  .tab:hover{color:var(--text);transform:translateY(-1px)}
+  .tab.active{
+    color:white;
+    border-color:rgba(96,165,250,.4);
+    background:linear-gradient(135deg,rgba(96,165,250,.18),rgba(167,139,250,.15));
+  }
+
+  .week{display:none}
+  .week.active{display:block}
+
+  .week-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:20px;
+    margin-bottom:18px;
+  }
+
+  .week-title{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+
+  .week-icon{
+    width:46px;height:46px;
+    display:grid;place-items:center;
+    border-radius:14px;
+    background:rgba(96,165,250,.12);
+    color:#93c5fd;
+    font-size:20px;
+  }
+
+  .week-title h3{font-size:23px;letter-spacing:-.6px}
+  .week-title p{color:var(--muted);font-size:12px;margin-top:2px}
+
+  .reset{
+    border:1px solid var(--line);
+    color:var(--muted);
+    background:rgba(255,255,255,.035);
+    border-radius:11px;
+    padding:9px 13px;
+    cursor:pointer;
+    font-size:12px;
+  }
+
+  .reset:hover{color:white}
+
+  .info-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:18px;
+  }
+
+  .info{
+    border:1px solid var(--line);
+    border-radius:17px;
+    padding:16px;
+    background:rgba(12,27,46,.7);
+  }
+
+  .info-label{
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    margin-bottom:5px;
+  }
+
+  .info-value{font-weight:750;font-size:14px}
+
+  .table-wrap{
+    overflow:auto;
+    border:1px solid var(--line);
+    border-radius:22px;
+    background:rgba(11,24,41,.84);
+    box-shadow:var(--shadow);
+  }
+
+  table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    min-width:920px;
+  }
+
+  th,td{
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+
+  th:last-child,td:last-child{border-right:0}
+  tbody tr:last-child td{border-bottom:0}
+
+  th{
+    padding:17px 18px;
+    text-align:left;
+    color:#b9c9dd;
+    background:#102039;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    position:sticky;
+    top:0;
+    z-index:2;
+  }
+
+  th:first-child{
+    width:140px;
+    color:white;
+  }
+
+  td{
+    padding:0;
+    vertical-align:top;
+    min-width:300px;
+    background:rgba(10,23,39,.55);
+  }
+
+  td.day{
+    min-width:140px;
+    width:140px;
+    padding:19px 18px;
+    font-weight:800;
+    color:white;
+    background:linear-gradient(180deg,rgba(20,39,64,.72),rgba(12,27,46,.72));
+    position:sticky;
+    left:0;
+    z-index:1;
+  }
+
+  .day small{
+    display:block;
+    color:var(--muted);
+    font-weight:500;
+    font-size:10px;
+    margin-top:3px;
+  }
+
+  .task{
+    width:100%;
+    min-height:105px;
+    padding:18px 19px;
+    border:0;
+    background:transparent;
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    transition:.2s ease;
+  }
+
+  .task:hover{
+    background:rgba(255,255,255,.035);
+  }
+
+  .check{
+    flex:0 0 auto;
+    width:25px;height:25px;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:8px;
+    display:grid;place-items:center;
+    color:transparent;
+    margin-top:1px;
+    background:rgba(255,255,255,.025);
+    transition:.2s ease;
+    font-weight:900;
+  }
+
+  .task-content{min-width:0}
+
+  .task-title{
+    font-size:13px;
+    font-weight:700;
+    line-height:1.4;
+  }
+
+  .task-meta{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:6px;
+  }
+
+  .task.done{
+    opacity:.5;
+  }
+
+  .task.done .check{
+    color:#06131f;
+    border-color:var(--green);
+    background:var(--green);
+  }
+
+  .task.done .task-title{
+    text-decoration:line-through;
+  }
+
+  .week-footer{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-top:13px;
+    color:var(--muted);
+    font-size:11px;
+  }
+
+  .week-footer strong{color:#c7d8eb}
+
+  footer{
+    text-align:center;
+    color:#61748d;
+    font-size:11px;
+    margin-top:38px;
+  }
+
+  @media(max-width:1000px){
+    .stats,.info-grid{grid-template-columns:repeat(2,1fr)}
+  }
+
+  @media(max-width:700px){
+    .app{width:min(100% - 22px,1440px);padding-top:24px}
+    .topbar{align-items:flex-start}
+    .today{display:none}
+    .hero{padding:28px}
+    .stats,.info-grid{grid-template-columns:1fr 1fr}
+    .week-header{align-items:flex-start;flex-direction:column}
+  }
+
+  @media(max-width:480px){
+    .stats,.info-grid{grid-template-columns:1fr}
+    .hero h2{font-size:34px}
+  }
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div>
+        <h1>Digital Product Dashboard</h1>
+        <p>Study • Apply • Build • Improve</p>
+      </div>
+    </div>
+    <div class="today" id="today"></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Personal Learning System</div>
+      <h2>Build the skill. Apply the lesson. Ship the work.</h2>
+      <p>
+        Three structured work weeks designed around your shifts, with clear
+        outputs, completion tracking and persistent progress.
+      </p>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">Overall Progress</div>
+      <div class="stat-value" id="overallPercent">0%</div>
+      <div class="stat-note">all scheduled sessions</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Completed</div>
+      <div class="stat-value" id="completedCount">0</div>
+      <div class="stat-note" id="totalCount">of 0 sessions</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Completed Hours</div>
+      <div class="stat-value" id="completedHours">0h</div>
+      <div class="stat-note">based on session duration</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Current Week</div>
+      <div class="stat-value" id="currentWeekLabel">Week 1</div>
+      <div class="stat-note">use the tabs below</div>
+    </div>
+  </section>
+
+  <section class="progress-card">
+    <div class="progress-head">
+      <span>Overall Daily System Progress</span>
+      <span id="overallProgressText">0%</span>
+    </div>
+    <div class="track"><div class="fill" id="overallFill"></div></div>
+  </section>
+
+  <nav class="tabs" aria-label="Weeks">
+    <button class="tab active" data-week="week1">☀ Week 1 · Shift Matin</button>
+    <button class="tab" data-week="week2">🌙 Week 2 · Shift Nuit</button>
+    <button class="tab" data-week="week3">🌆 Week 3 · Shift Soir</button>
+  </nav>
+
+  <main>
+
+    <!-- WEEK 1 -->
+    <section class="week active" id="week1">
+      <div class="week-header">
+        <div class="week-title">
+          <div class="week-icon">☀</div>
+          <div>
+            <h3>الأسبوع 1 — SHIFT MATIN</h3>
+            <p>4 hours of Digital Product work · 20:00 → 00:00</p>
+          </div>
+        </div>
+        <button class="reset" data-reset="week1">Reset Week</button>
+      </div>
+
+      <div class="info-grid">
+        <div class="info"><div class="info-label">Service</div><div class="info-value">06:30 → 14:45</div></div>
+        <div class="info"><div class="info-label">Home</div><div class="info-value">16:00</div></div>
+        <div class="info"><div class="info-label">Sleep</div><div class="info-value">17:00 → 19:00</div></div>
+        <div class="info"><div class="info-label">Digital Product</div><div class="info-value">20:00 → 00:00</div></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Day</th><th>20:00 → 22:00</th><th>22:00 → 00:00</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="day">الاثنين<small>Monday</small></td>
+              <td><button class="task" data-id="w1-mon-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 تعلم تحليل Content Viral</span><span class="task-meta">2h · Learning</span></span></button></td>
+              <td><button class="task" data-id="w1-mon-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🎯 تطبيق التحليل على Health Anxiety</span><span class="task-meta">2h · Application</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الثلاثاء<small>Tuesday</small></td>
+              <td><button class="task" data-id="w1-tue-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 تعلم تحليل Ad Copy</span><span class="task-meta">2h · Learning</span></span></button></td>
+              <td><button class="task" data-id="w1-tue-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ تطبيق التحليل + إعادة كتابة Copy</span><span class="task-meta">2h · Practice</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الأربعاء<small>Wednesday</small></td>
+              <td><button class="task" data-id="w1-wed-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 تحليل Content Viral</span><span class="task-meta">2h · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w1-wed-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🎯 تطبيق الدروس على Content ديالك</span><span class="task-meta">2h · Application</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الخميس<small>Thursday</small></td>
+              <td><button class="task" data-id="w1-thu-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 تحليل Ad Copy</span><span class="task-meta">2h · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w1-thu-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ تطبيق + تدريب على Copy كـconverts</span><span class="task-meta">2h · Practice</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الجمعة<small>Friday</small></td>
+              <td><button class="task" data-id="w1-fri-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔥 Hooks Research: تحليل Hooks ناجحين + Videos + Posts</span><span class="task-meta">2h · Research</span></span></button></td>
+              <td><button class="task" data-id="w1-fri-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ كتابة وتجريب Hooks خاصة بـHealth Anxiety</span><span class="task-meta">2h · Writing</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">السبت<small>Saturday</small></td>
+              <td><button class="task" data-id="w1-sat-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">📖 قراءة كتاب مرتبط بـCopywriting / Mindset</span><span class="task-meta">2h · Reading</span></span></button></td>
+              <td><button class="task" data-id="w1-sat-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">📖 قراءة</span><span class="task-meta">2h · Reading</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الأحد<small>Sunday</small></td>
+              <td><button class="task" data-id="w1-sun-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">📊 تحليل الأسبوع: شنو نجح؟ شنو ما نجحش؟ شنو تعلمت؟</span><span class="task-meta">2h · Weekly Review</span></span></button></td>
+              <td><button class="task" data-id="w1-sun-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🧠 تطوير النظام + تطبيق الدروس + تحديد خطة الأسبوع القادم</span><span class="task-meta">2h · Planning</span></span></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="week-footer"><span>Week 1 progress: <strong class="week-progress" data-progress="week1">0%</strong></span><span>28h scheduled</span></div>
+    </section>
+
+    <!-- WEEK 2 -->
+    <section class="week" id="week2">
+      <div class="week-header">
+        <div class="week-title">
+          <div class="week-icon">☾</div>
+          <div>
+            <h3>🌙 الأسبوع 2 — SHIFT NUIT</h3>
+            <p>4 focused hours daily · 17:00 → 21:00</p>
+          </div>
+        </div>
+        <button class="reset" data-reset="week2">Reset Week</button>
+      </div>
+
+      <div class="info-grid">
+        <div class="info"><div class="info-label">Service</div><div class="info-value">Sunday 23:00 → 06:30</div></div>
+        <div class="info"><div class="info-label">Sleep</div><div class="info-value">≈ 08:00 → 16:00</div></div>
+        <div class="info"><div class="info-label">Study</div><div class="info-value">17:00 → 21:00</div></div>
+        <div class="info"><div class="info-label">Daily Focus</div><div class="info-value">4h · Clear Output</div></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Day</th><th>17:00 → 19:00</th><th>19:00 → 21:00</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="day">الاثنين<small>Monday</small></td>
+              <td><button class="task" data-id="w2-mon-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Content Viral Analysis</span><span class="task-meta">2h · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w2-mon-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🎯 تطبيق على Health Anxiety</span><span class="task-meta">2h · Application</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الثلاثاء<small>Tuesday</small></td>
+              <td><button class="task" data-id="w2-tue-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Ad Copy Analysis</span><span class="task-meta">2h · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w2-tue-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ تطبيق على Niche</span><span class="task-meta">2h · Application</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الأربعاء<small>Wednesday</small></td>
+              <td><button class="task" data-id="w2-wed-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Content Viral Analysis</span><span class="task-meta">2h · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w2-wed-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🎯 تطبيق</span><span class="task-meta">2h · Application</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الخميس<small>Thursday</small></td>
+              <td><button class="task" data-id="w2-thu-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Ad Copy Analysis</span><span class="task-meta">2h · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w2-thu-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ Copywriting Practice</span><span class="task-meta">2h · Practice</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الجمعة<small>Friday</small></td>
+              <td><button class="task" data-id="w2-fri-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🔥 Hooks Research</span><span class="task-meta">2h · Research</span></span></button></td>
+              <td><button class="task" data-id="w2-fri-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ Hook Writing Practice</span><span class="task-meta">2h · Writing</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">السبت<small>Saturday</small></td>
+              <td><button class="task" data-id="w2-sat-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">📖 قراءة Copywriting / Mindset</span><span class="task-meta">2h · Reading</span></span></button></td>
+              <td><button class="task" data-id="w2-sat-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">📖 قراءة</span><span class="task-meta">2h · Reading</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الأحد<small>Sunday</small></td>
+              <td><button class="task" data-id="w2-sun-a" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">📊 Weekly Analysis</span><span class="task-meta">2h · Weekly Review</span></span></button></td>
+              <td><button class="task" data-id="w2-sun-b" data-hours="2"><span class="check">✓</span><span class="task-content"><span class="task-title">🎯 Deep Work: اختيار أهم الدروس + تطوير Content/Product/Copy</span><span class="task-meta">2h · Deep Work</span></span></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="week-footer"><span>Week 2 progress: <strong class="week-progress" data-progress="week2">0%</strong></span><span>28h scheduled</span></div>
+    </section>
+
+    <!-- WEEK 3 -->
+    <section class="week" id="week3">
+      <div class="week-header">
+        <div class="week-title">
+          <div class="week-icon">🌆</div>
+          <div>
+            <h3>🌆 الأسبوع 3 — SHIFT SOIR</h3>
+            <p>Exactly 3 hours · 09:30 → 12:30 · no extra 30 minutes</p>
+          </div>
+        </div>
+        <button class="reset" data-reset="week3">Reset Week</button>
+      </div>
+
+      <div class="info-grid">
+        <div class="info"><div class="info-label">Service</div><div class="info-value">14:45 → 23:00</div></div>
+        <div class="info"><div class="info-label">Sleep</div><div class="info-value">01:00 → 09:00</div></div>
+        <div class="info"><div class="info-label">Digital Product</div><div class="info-value">09:30 → 12:30</div></div>
+        <div class="info"><div class="info-label">Daily Focus</div><div class="info-value">3h exactly</div></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Day</th><th>09:30 → 11:00</th><th>11:00 → 12:30</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="day">الاثنين<small>Monday</small></td>
+              <td><button class="task" data-id="w3-mon-a" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Viral Content Analysis</span><span class="task-meta">1h 30m · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w3-mon-b" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🎯 تطبيق على Niche</span><span class="task-meta">1h 30m · Application</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الثلاثاء<small>Tuesday</small></td>
+              <td><button class="task" data-id="w3-tue-a" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Ad Copy Analysis</span><span class="task-meta">1h 30m · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w3-tue-b" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ تطبيق + Copywriting</span><span class="task-meta">1h 30m · Practice</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الأربعاء<small>Wednesday</small></td>
+              <td><button class="task" data-id="w3-wed-a" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Viral Content Analysis</span><span class="task-meta">1h 30m · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w3-wed-b" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🎯 تطبيق</span><span class="task-meta">1h 30m · Application</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الخميس<small>Thursday</small></td>
+              <td><button class="task" data-id="w3-thu-a" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🔎 Ad Copy Analysis</span><span class="task-meta">1h 30m · Analysis</span></span></button></td>
+              <td><button class="task" data-id="w3-thu-b" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ Copywriting Practice</span><span class="task-meta">1h 30m · Practice</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الجمعة<small>Friday</small></td>
+              <td><button class="task" data-id="w3-fri-a" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🔥 Hooks Research</span><span class="task-meta">1h 30m · Research</span></span></button></td>
+              <td><button class="task" data-id="w3-fri-b" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">✍️ كتابة Hooks</span><span class="task-meta">1h 30m · Writing</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">السبت<small>Saturday</small></td>
+              <td><button class="task" data-id="w3-sat-a" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">📖 قراءة</span><span class="task-meta">1h 30m · Reading</span></span></button></td>
+              <td><button class="task" data-id="w3-sat-b" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">📖 قراءة</span><span class="task-meta">1h 30m · Reading</span></span></button></td>
+            </tr>
+            <tr>
+              <td class="day">الأحد<small>Sunday</small></td>
+              <td><button class="task" data-id="w3-sun-a" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">📊 Weekly Analysis</span><span class="task-meta">1h 30m · Weekly Review</span></span></button></td>
+              <td><button class="task" data-id="w3-sun-b" data-hours="1.5"><span class="check">✓</span><span class="task-content"><span class="task-title">🚀 تطبيق أهم الدروس</span><span class="task-meta">1h 30m · Execution</span></span></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="week-footer"><span>Week 3 progress: <strong class="week-progress" data-progress="week3">0%</strong></span><span>21h scheduled · 3h/day exactly</span></div>
+    </section>
+
+  </main>
+
+  <footer>Built for consistency · Complete the work, preserve the progress, improve every week.</footer>
+</div>
+
+<script>
+  const STORAGE_KEY = "digitalProductDashboard_v2";
+  const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+  const today = document.getElementById("today");
+  today.textContent = new Date().toLocaleDateString("en-US", {
+    weekday:"short", month:"short", day:"numeric", year:"numeric"
+  });
+
+  const tasks = [...document.querySelectorAll(".task")];
+
+  function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function applyState(){
+    tasks.forEach(task => {
+      const done = state[task.dataset.id] === true;
+      task.classList.toggle("done", done);
+      task.setAttribute("aria-pressed", String(done));
+    });
+  }
+
+  function updateStats(){
+    let completed = 0;
+    let total = tasks.length;
+    let hours = 0;
+
+    tasks.forEach(task => {
+      if(task.classList.contains("done")){
+        completed++;
+        hours += Number(task.dataset.hours || 0);
+      }
+    });
+
+    const pct = total ? Math.round(completed / total * 100) : 0;
+
+    document.getElementById("overallPercent").textContent = pct + "%";
+    document.getElementById("overallProgressText").textContent = pct + "%";
+    document.getElementById("overallFill").style.width = pct + "%";
+    document.getElementById("completedCount").textContent = completed;
+    document.getElementById("totalCount").textContent = "of " + total + " sessions";
+    document.getElementById("completedHours").textContent =
+      Number.isInteger(hours) ? hours + "h" : hours.toFixed(1) + "h";
+
+    ["week1","week2","week3"].forEach(weekId => {
+      const weekTasks = [...document.querySelectorAll("#" + weekId + " .task")];
+      const done = weekTasks.filter(t => t.classList.contains("done")).length;
+      const p = weekTasks.length ? Math.round(done / weekTasks.length * 100) : 0;
+      const el = document.querySelector('.week-progress[data-progress="' + weekId + '"]');
+      if(el) el.textContent = p + "%";
+    });
+  }
+
+  tasks.forEach(task => {
+    task.addEventListener("click", () => {
+      const id = task.dataset.id;
+      state[id] = !state[id];
+      save();
+      applyState();
+      updateStats();
+    });
+  });
+
+  document.querySelectorAll(".reset").forEach(button => {
+    button.addEventListener("click", () => {
+      const weekId = button.dataset.reset;
+      const weekTasks = document.querySelectorAll("#" + weekId + " .task");
+      const ok = confirm("Reset all completed sessions for this week?");
+      if(!ok) return;
+
+      weekTasks.forEach(task => delete state[task.dataset.id]);
+      save();
+      applyState();
+      updateStats();
+    });
+  });
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".week").forEach(w => w.classList.remove("active"));
+
+      tab.classList.add("active");
+      document.getElementById(tab.dataset.week).classList.add("active");
+      document.getElementById("currentWeekLabel").textContent =
+        tab.dataset.week.replace("week","Week ");
+    });
+  });
+
+  applyState();
+  updateStats();
+</script>
+</body>
+</html>
